@@ -494,7 +494,7 @@ TestAttributeCollection::testIOHDF5()
 
     // read in the attribute collection
     AttributeCollection c2;
-    //CPPUNIT_ASSERT_THROW(c2.read(volume_group2.id()), Iex::TypeExc);
+    CPPUNIT_ASSERT_THROW(c2.read(volume_group2.id()), Iex::TypeExc);
     
     // Register the three types.
     Attribute::clearAttributeRegistry();
