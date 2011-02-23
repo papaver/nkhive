@@ -595,101 +595,16 @@ Node<CellType, A>::write(HDF5Id volume_group_id, size_t quadrant,
                          index_vec offset) const
 {
     if (isBranching()) {
-        index_type child_dim = computeChildDim();
 
-        // accumulate offset and recurse
-        if (isCellParent()) {
-
-            // iterate over set branches
-            const_branch_iterator iter = 
-                m_bitfield.setIterator(m_branches.begin());
-            for ( ; iter(); ++iter) {
-                index_type i, j, k;
-                iter.getCoordinates(i, j, k);
-
-                // accumulate offsets to pass down the tree
-                index_vec accum_offset = 
-                    accumulateBranchOffset(offset, child_dim, i, j, k);
-
-                // write out the cell  
-                iter->cell->write(volume_group_id, quadrant, accum_offset);
-            }
-
-        } else {
-
-            // iterate over set branches
-            const_branch_iterator iter = 
-                m_bitfield.setIterator(m_branches.begin());
-            for ( ; iter(); ++iter) {
-                index_type i, j, k;
-                iter.getCoordinates(i, j, k);
-
-                // accumulate offsets to pass down the tree
-                index_vec accum_offset = 
-                    accumulateBranchOffset(offset, child_dim, i, j, k);
-               
-                // recurse on the child 
-                iter->node->write(volume_group_id, quadrant, accum_offset);
-            }
-        }
+        // process branching node
+        writeBranchNode(volume_group_id, quadrant, offset);
 
     // only write out if it's a fill node
     } else if (isFill()) {
         
-        // open or create a group for the cell or fill node
-        HDF5Group leaf_group;
-       
-        // construct a unique name for this leaf_group  
-        String leaf_group_name;
-        constructLeafGroupName(LEAF_TYPE_FILL_NODE, quadrant, offset, 
-                               leaf_group_name);
+        // write out a fill node
+        writeFillNode(volume_group_id, quadrant, offset);
 
-        // if leaf group exists open it
-        leaf_group.open(volume_group_id, leaf_group_name); 
-        if (!leaf_group.isValid()) {
-            // if it doesn't, create it
-            leaf_group.create(volume_group_id, leaf_group_name);
-        }
-
-        // write out the level
-        writeScalarAttribute(leaf_group.id(), 
-                             kFillNodeLevelAttr,  
-                             TypeToHDF5Type<BOOST_TYPEOF(m_level)>::type(),
-                             &m_level);
-
-        // write out the fill value
-        writeScalarAttribute(leaf_group.id(),
-                             kFillNodeValueAttr,
-                             TypeToHDF5Type<value_type>::type(),
-                             &m_value);
-
-        // write out the index offset
-        writeVectorAttribute(leaf_group.id(),
-                             kIndexOffsetAttr,
-                             TypeToHDF5Type<index_type>::type(),
-                             3,
-                             &offset);
-
-        // write out the quadrant
-        writeScalarAttribute(leaf_group.id(),
-                             kQuadrantAttr,
-                             TypeToHDF5Type<BOOST_TYPEOF(quadrant)>::type(),
-                             &quadrant);
-        
-        // define the leaf type enum data type
-        HDF5DataType leaf_type_enum;
-        leaf_type_enum.create(H5T_ENUM, sizeof(LeafType));
-
-        // add the enum entries
-        LeafType type = LEAF_TYPE_CELL;
-        leaf_type_enum.enumInsert("LEAF_TYPE_CELL", &type);
-        type = LEAF_TYPE_FILL_NODE;
-        leaf_type_enum.enumInsert("LEAF_TYPE_FILL_NODE", &type);
-    
-        // now write the actual attribute out   
-        type = LEAF_TYPE_FILL_NODE; 
-        writeScalarAttribute(leaf_group.id(), kLeafTypeAttr, 
-                             leaf_type_enum.id(), &type);
     }
 }
 
@@ -1060,3 +975,113 @@ Node<CellType, A>::accumulateBranchOffset(index_vec offset,
     return offset;
 }               
 
+//------------------------------------------------------------------------------
+
+template <typename CellType, typename A>
+inline void
+Node<CellType, A>::writeFillNode(HDF5Id volume_group_id, size_t quadrant,
+                                 index_vec offset) const
+{
+    // open or create a group for the cell or fill node
+    HDF5Group leaf_group;
+   
+    // construct a unique name for this leaf_group  
+    String leaf_group_name;
+    constructLeafGroupName(LEAF_TYPE_FILL_NODE, quadrant, offset, 
+                           leaf_group_name);
+
+    // if leaf group exists open it
+    leaf_group.open(volume_group_id, leaf_group_name); 
+    if (!leaf_group.isValid()) {
+        // if it doesn't, create it
+        leaf_group.create(volume_group_id, leaf_group_name);
+    }
+
+    // write out the level
+    writeScalarAttribute(leaf_group.id(), 
+                         kFillNodeLevelAttr,  
+                         TypeToHDF5Type<BOOST_TYPEOF(m_level)>::type(),
+                         &m_level);
+
+    // write out the fill value
+    writeScalarAttribute(leaf_group.id(),
+                         kFillNodeValueAttr,
+                         TypeToHDF5Type<value_type>::type(),
+                         &m_value);
+
+    // write out the index offset
+    writeVectorAttribute(leaf_group.id(),
+                         kIndexOffsetAttr,
+                         TypeToHDF5Type<index_type>::type(),
+                         3,
+                         &offset);
+
+    // write out the quadrant
+    writeScalarAttribute(leaf_group.id(),
+                         kQuadrantAttr,
+                         TypeToHDF5Type<BOOST_TYPEOF(quadrant)>::type(),
+                         &quadrant);
+    
+    // define the leaf type enum data type
+    HDF5DataType leaf_type_enum;
+    leaf_type_enum.create(H5T_ENUM, sizeof(LeafType));
+
+    // add the enum entries
+    LeafType type = LEAF_TYPE_CELL;
+    leaf_type_enum.enumInsert("LEAF_TYPE_CELL", &type);
+    type = LEAF_TYPE_FILL_NODE;
+    leaf_type_enum.enumInsert("LEAF_TYPE_FILL_NODE", &type);
+
+    // now write the actual attribute out   
+    type = LEAF_TYPE_FILL_NODE; 
+    writeScalarAttribute(leaf_group.id(), kLeafTypeAttr, 
+                         leaf_type_enum.id(), &type);
+}
+
+//------------------------------------------------------------------------------
+
+template <typename CellType, typename A>
+inline void
+Node<CellType, A>::writeBranchNode(HDF5Id volume_group_id, size_t quadrant,
+                                   index_vec offset) const
+{
+    index_type child_dim = computeChildDim();
+
+    // accumulate offset and recurse
+    if (isCellParent()) {
+
+        // iterate over set branches
+        const_branch_iterator iter = 
+            m_bitfield.setIterator(m_branches.begin());
+        for ( ; iter(); ++iter) {
+            index_type i, j, k;
+            iter.getCoordinates(i, j, k);
+
+            // accumulate offsets to pass down the tree
+            index_vec accum_offset = 
+                accumulateBranchOffset(offset, child_dim, i, j, k);
+
+            // write out the cell  
+            iter->cell->write(volume_group_id, quadrant, accum_offset);
+        }
+
+    } else {
+
+        // iterate over set branches
+        const_branch_iterator iter = 
+            m_bitfield.setIterator(m_branches.begin());
+        for ( ; iter(); ++iter) {
+            index_type i, j, k;
+            iter.getCoordinates(i, j, k);
+
+            // accumulate offsets to pass down the tree
+            index_vec accum_offset = 
+                accumulateBranchOffset(offset, child_dim, i, j, k);
+           
+            // recurse on the child 
+            iter->node->write(volume_group_id, quadrant, accum_offset);
+        }
+    }
+}
+
+//------------------------------------------------------------------------------

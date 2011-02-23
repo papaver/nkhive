@@ -375,6 +375,18 @@ private:
                                      index_type j, 
                                      index_type k) const;
 
+    /**
+     * handles writing of fill nodes to file
+     */
+    void writeFillNode(HDF5Id volume_group_id, size_t quadrant, 
+                       index_vec offset) const;
+
+    /**
+     * handles writing of contents under branching node
+     */
+    void writeBranchNode(HDF5Id volume_group_id, size_t quadrant, 
+                         index_vec offset) const;
+
     //--------------------------------------------------------------------------
     // friends.
     //--------------------------------------------------------------------------
