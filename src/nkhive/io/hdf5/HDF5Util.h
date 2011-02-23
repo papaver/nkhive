@@ -189,7 +189,7 @@ void readScalarAttribute(HDF5Id parent_id, const String &attr_name,
 void writeScalarAttribute(HDF5Id parent_id, const String &attr_name, 
                           HDF5Id data_type_id, const void *data);
 
-hsize_t getVectorAttributeSize(HDF5Id parent_id, const String &attr_name);
+HDF5Size getVectorAttributeSize(HDF5Id parent_id, const String &attr_name);
 
 void readVectorAttribute(HDF5Id parent_id, const String &attr_name, void *data);
 
@@ -197,14 +197,14 @@ void writeVectorAttribute(HDF5Id parent_id, const String &attr_name,
                           HDF5Id component_data_type_id, ssize_t num_components,
                           const void *data);
 
-hsize_t getDataSetStorageSize(HDF5Id parent_id,
+HDF5Size getDataSetStorageSize(HDF5Id parent_id,
                               const String &name);
 
 void readSimpleDataSet(HDF5Id parent_id, const String &name,
                        HDF5Id data_type_id, void *data);
 
 void writeSimpleDataSet(HDF5Id parent_id, const String &name, i32 rank, 
-                        const hsize_t *dims, HDF5Id data_type_id, 
+                        const HDF5Size *dims, HDF5Id data_type_id, 
                         const void *data);
 
 void disableHDF5ErrorOutput();

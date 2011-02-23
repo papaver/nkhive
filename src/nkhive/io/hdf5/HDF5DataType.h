@@ -69,7 +69,7 @@ public:
 
     void copyFromExisting(HDF5Id existing_type_id);
 
-    void createArray(HDF5Id base_type_id, u32 rank, const hsize_t dims[]);
+    void createArray(HDF5Id base_type_id, u32 rank, const HDF5Size dims[]);
 
     void enumInsert(const char *name, void *value) const;
     void compoundInsert(const String &member_name, size_t offset, 

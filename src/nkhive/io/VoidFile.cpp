@@ -232,7 +232,7 @@ VoidFile::read()
     root_group.open(m_id, String("/"));
 
     // get the size of the tag string
-    hsize_t tag_data_size = getVectorAttributeSize(root_group.id(), kTagAttr);
+    HDF5Size tag_data_size = getVectorAttributeSize(root_group.id(), kTagAttr);
     char data[tag_data_size];
 
     // read in the tag attribute

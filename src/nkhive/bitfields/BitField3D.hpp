@@ -668,7 +668,7 @@ BitField3D<T, A>::write(HDF5Id parent_id) const
     if (bit) { ++block; }
 
     // write the bitfield as a dataset  
-    hsize_t data_size = block * sizeof(T);
+    HDF5Size data_size = block * sizeof(T);
     writeSimpleDataSet(parent_id, 
                        kBitFieldName, 
                        1, &data_size, 

@@ -75,7 +75,7 @@ HDF5DataSpace::createScalar()
 
 void
 HDF5DataSpace::createSimple(i32 rank, 
-                            const hsize_t *dims, const hsize_t *max_dims)
+                            const HDF5Size *dims, const HDF5Size *max_dims)
 {
     m_id = H5Screate_simple(rank, dims, max_dims);
     if (!isValid()) {

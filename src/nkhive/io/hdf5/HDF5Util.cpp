@@ -120,7 +120,7 @@ writeScalarAttribute(HDF5Id parent_id, const String &attr_name,
 
 //------------------------------------------------------------------------------
 
-hsize_t
+HDF5Size
 getVectorAttributeSize(HDF5Id parent_id, const String &attr_name)
 {
     // check if the attribute exists
@@ -186,7 +186,7 @@ writeVectorAttribute(HDF5Id parent_id, const String &attr_name,
     // create the array data type
     HDF5DataType data_type;
     u32 rank = 1;
-    hsize_t type_dims[rank];
+    HDF5Size type_dims[rank];
     type_dims[0] = num_components;
     data_type.createArray(component_data_type_id, rank, type_dims);
 
@@ -217,7 +217,7 @@ writeVectorAttribute(HDF5Id parent_id, const String &attr_name,
 
 //------------------------------------------------------------------------------
 
-hsize_t
+HDF5Size
 getDataSetStorageSize(HDF5Id parent_id, const String &name)
 {
     // open the data set
@@ -264,7 +264,7 @@ readSimpleDataSet(HDF5Id parent_id, const String &name, HDF5Id data_type_id,
 
 void
 writeSimpleDataSet(HDF5Id parent_id, const String &name, i32 rank, 
-                   const hsize_t *dims, HDF5Id data_type_id, const void *data)
+                   const HDF5Size *dims, HDF5Id data_type_id, const void *data)
 {
     // check if data type is valid
     if (data_type_id == -1) {

@@ -65,7 +65,7 @@ public:
     //--------------------------------------------------------------------------
     
     void createScalar();
-    void createSimple(i32 rank, const hsize_t *dims, const hsize_t *maxdims);
+    void createSimple(i32 rank, const HDF5Size *dims, const HDF5Size *maxdims);
 
 };
 

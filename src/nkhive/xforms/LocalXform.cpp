@@ -214,7 +214,7 @@ LocalXform::write(HDF5Id parent_id) const
 {
     // create the data type for the local xform attribute
     HDF5DataType data_type;
-    hsize_t type_dims[] = { 3 };
+    HDF5Size type_dims[] = { 3 };
     data_type.createArray(H5T_NATIVE_DOUBLE, 1, type_dims);
 
     writeScalarAttribute(parent_id, kLocalXformAttr, 

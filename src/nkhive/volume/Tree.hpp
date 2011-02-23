@@ -570,7 +570,7 @@ Tree<CellType, A>::read(HDF5Id volume_group_id)
     }
 
     // iterate over leaf groups and construct the tree
-    hsize_t iter_index = 0;
+    HDF5Size iter_index = 0;
     H5Literate(volume_group_id, H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, 
                &iter_index, Tree<CellType, A>::createLeaf, 
                reinterpret_cast<void *>(this));

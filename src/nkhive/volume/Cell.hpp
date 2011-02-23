@@ -1118,8 +1118,8 @@ Cell<T, A>::writeInternal(HDF5Id cell_group_id) const
 
     if (!isFilled()) {
         // write out voxel data
-        // have to convert to hsize_t manually here
-        hsize_t data_size = m_data_size;
+        // have to convert to HDF5Size manually here
+        HDF5Size data_size = m_data_size;
         writeSimpleDataSet(cell_group_id,
                            kCellDataSetName,
                            1, &data_size,

@@ -86,7 +86,7 @@ HDF5DataType::copyFromExisting(HDF5Id existing_type_id)
 //------------------------------------------------------------------------------
 
 void
-HDF5DataType::createArray(HDF5Id base_type_id, u32 rank, const hsize_t dims[])
+HDF5DataType::createArray(HDF5Id base_type_id, u32 rank, const HDF5Size dims[])
 {
     m_id = H5Tarray_create(base_type_id, rank, dims);
     if (!isValid()) {

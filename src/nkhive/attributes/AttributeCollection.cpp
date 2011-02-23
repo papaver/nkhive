@@ -309,7 +309,7 @@ AttributeCollection::read(HDF5Id volume_group_id)
     }
 
     // iterate over all attributes
-    hsize_t attr_index = 0;
+    HDF5Size attr_index = 0;
     H5Aiterate(user_attr_group.id(), 
                H5_INDEX_NAME, 
                H5_ITER_NATIVE, 

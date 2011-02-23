@@ -52,6 +52,7 @@
 typedef hid_t   HDF5Id;
 typedef herr_t  HDF5Err;
 typedef htri_t  HDF5Tri;
+typedef hsize_t HDF5Size;
 
 //------------------------------------------------------------------------------
 // interface definition

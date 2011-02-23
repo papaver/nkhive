@@ -146,7 +146,7 @@ HDF5Group::deleteSubtree(HDF5Id group_id, const char *group_name,
     child_group.open(group_id, String(group_name));
 
     // iterate over the group's children
-    hsize_t iter_index = 0;
+    HDF5Size iter_index = 0;
     H5Literate(child_group.id(), H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, 
                &iter_index, deleteSubtree, NULL);
 
