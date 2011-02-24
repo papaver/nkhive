@@ -50,9 +50,13 @@ install (
   )
 
 # Copy over all headers into an include directory
-install (
-  FILES ${Headers} ${Inlines}
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}
+foreach (dir ${Directories})
+  install (
+    DIRECTORY ${dir} 
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}
+    PATTERN ${dir}/*.h
+    PATTERN ${dir}/*.hpp
   )
+endforeach (dir)
 
 #-------------------------------------------------------------------------------
