@@ -1387,7 +1387,7 @@ template <typename FI, bool S>
 inline typename BitField3D<T, A>::template status_iterator<FI, S>& 
 BitField3D<T, A>::status_iterator<FI, S>::operator++()
 {
-    // [moiz] this can be sped up by checking for empty blocks
+    //  this can be sped up by checking for empty blocks
     //  might be good to specialize this function for 0 and 1
 
     index_type reset;

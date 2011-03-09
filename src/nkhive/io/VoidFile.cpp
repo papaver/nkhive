@@ -48,7 +48,7 @@ BEGIN_NKHIVE_NS
 // class globals
 //------------------------------------------------------------------------------
 
-const String VoidFile::TAG_STR            = String("libvoid_");
+const String VoidFile::TAG_STR            = String("nektar_");
 
 const String VoidFile::kContainerEnumType = String("container_enum_type");
 const String VoidFile::kVersionType       = String("version_type");
@@ -194,7 +194,7 @@ VoidFile::read(std::istream &is) throw (Iex::InputExc)
     String tag;
     tag.read(is);
     if (tag != TAG_STR) {
-        THROW(Iex::InputExc, "Invalid file type: libvoid tag not found.");
+        THROW(Iex::InputExc, "Invalid file type: nektar tag not found.");
     }
 
     // read in type and verify 
@@ -240,7 +240,7 @@ VoidFile::read()
 
     String tag(data);
     if (tag != TAG_STR) {
-        THROW(Iex::InputExc, "Invalid file type: libvoid tag not found.");
+        THROW(Iex::InputExc, "Invalid file type: nektar tag not found.");
     }
 
     // get the container type attribute

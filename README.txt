@@ -39,6 +39,26 @@ Contributing
 
 --------------------------------------------------------------------------------
 
+Checking out the Source
+
+    You can checkout the source using git from github. Refer to 
+    http://help.github.com/ for details in checking out git repositories and
+    using github in general. 
+
+    The code is organized into two branches: "dev" and "master". The master
+    branch is our release branch and is always stable. The development branch
+    contains incremental feature development from NektarFX as well as external
+    contributors like yourself. The "dev" branch is not guaranteed to be stable
+    but will most likely contain newer features. The "master" branch will only
+    contain our stable releases with each commit tagged with the release
+    version of the library. 
+
+    Every so often, NektarFX will integrate a commit point from the "dev"
+    branch into the "master" branch for a new release if and only if the commit
+    point is stable passes QA.
+
+--------------------------------------------------------------------------------
+
 Supported Platforms
     
     All flavors of Unix, Linux, and Mac OS X.
