@@ -5,7 +5,7 @@ set (Directories
 
 append_files (Sources "cpp" ${Directories})
 
-include_directories (${PROJECT_SOURCE_DIR}/src)
+include_directories (BEFORE ${PROJECT_SOURCE_DIR}/src)
 
 add_executable (unittest ${Sources})
 

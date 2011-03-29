@@ -78,7 +78,7 @@ set (nkbase_lib_dir "" CACHE PATH
 
 # Options for setting the hdf5 path
 set (hdf5_inc_dir "" CACHE PATH
-     "Location of hdft include directory")
+     "Location of hdf5 include directory")
 set (hdf5_lib_dir "" CACHE PATH
      "Location of hdf5 libraries")
 
