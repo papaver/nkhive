@@ -51,6 +51,7 @@ class TestVolumeFile : public CppUnit::TestFixture
     CPPUNIT_TEST(testMultipleVolume);
     CPPUNIT_TEST(testReadWrite);
     CPPUNIT_TEST(testSingleVolumeStream);
+    CPPUNIT_TEST(testNumVolumes);
     CPPUNIT_TEST_SUITE_END();
     
 public:
@@ -71,6 +72,7 @@ public:
     void testReadWriteSingleVolume();
     void testReadWriteSingleVolumeOverwriteEmpty();
     void testSingleVolumeStream();
+    void testNumVolumes();
 };
 
 //-----------------------------------------------------------------------------
@@ -463,6 +465,52 @@ TestVolumeFile::testSingleVolumeStream()
     // check the rest of the volume
     CPPUNIT_ASSERT(v->operator==(volume));
 
+    Attribute::clearAttributeRegistry();
+}
+
+//------------------------------------------------------------------------------
+
+void
+TestVolumeFile::testNumVolumes()
+{
+    USING_NK_NS
+    USING_NKHIVE_NS
+    
+    // register the string attributes for io
+    StringAttribute::registerAttributeType();
+    
+    Volume<float> volume(2, 2, 1.0f);
+    Volume<float> volume2(3, 3, 1.0f);
+
+    String volume_name("volume1");
+    String volume2_name("volume2");
+
+    volume.setName(volume_name);
+    volume2.setName(volume2_name);
+
+    volume.set(16, 0, 0, 2.0f);
+    volume.set(64, 123, 64, 2.0f);
+    volume.set(-64, -23, -1, 2.0f);
+    volume.set(-64, -23, 1, 2.0f);
+    volume.set(-64, 23, 1, 2.0f);
+    volume.set(64, 23, 1, 2.0f);
+    volume2.set(64, -23, 1, 2.0f);
+    volume2.set(64, 23, -1, 2.0f);
+    volume2.set(64, -23, -1, 2.0f);
+    volume2.set(-64, 23, -1, 2.0f);
+
+    // write both volumes out to same file
+    VolumeFile file("testingHDF5.hv", VoidFile::WRITE_TRUNC);
+    file.write(volume);
+
+    CPPUNIT_ASSERT(file.numVolumes() == 1);
+
+    file.write(volume2);
+
+    CPPUNIT_ASSERT(file.numVolumes() == 2);
+
+    file.close();
+    
     Attribute::clearAttributeRegistry();
 }
 

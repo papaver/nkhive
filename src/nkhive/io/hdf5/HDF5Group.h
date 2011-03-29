@@ -74,6 +74,11 @@ public:
      */
     void close();
 
+    /**
+     * return the number of children linked from this group
+     */
+    i32 numChildren() const;
+
     //--------------------------------------------------------------------------
     // static methods
     //--------------------------------------------------------------------------

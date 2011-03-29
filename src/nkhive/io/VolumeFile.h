@@ -90,6 +90,11 @@ public:
     template <typename V> typename V::shared_ptr read(u32 index = 0);
 
     /**
+     * Determine number of volumes in file
+     */
+    i32 numVolumes() const;
+
+    /**
      * Read volume from stream.
      */
     template <typename V> typename V::shared_ptr read(std::istream &is);

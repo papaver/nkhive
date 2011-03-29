@@ -123,6 +123,17 @@ VolumeFile::read(u32 index)
 
 //------------------------------------------------------------------------------
 
+inline i32
+VolumeFile::numVolumes() const
+{
+    HDF5Group volume_root;
+    HDF5Group::getRootGroup(m_id, kVolumeRootGroup, volume_root);
+
+    return volume_root.numChildren();
+}
+
+//------------------------------------------------------------------------------
+
 template <typename V>
 inline void 
 VolumeFile::write(const V& volume)
@@ -163,7 +174,6 @@ VolumeFile::readInternal(u32 index)
 }
 
 //------------------------------------------------------------------------------
-
 
 template <typename V>
 inline void 

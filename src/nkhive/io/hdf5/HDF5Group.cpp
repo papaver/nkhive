@@ -100,6 +100,22 @@ void HDF5Group::close()
 
 //------------------------------------------------------------------------------
 
+i32 HDF5Group::numChildren() const
+{
+    // get the group info
+    H5G_info_t group_info;
+    HDF5Err res = H5Gget_info(m_id, &group_info);
+
+    if (res < 0) {
+        THROW(Iex::IoExc, "Could not get info for group");
+    }
+
+    // return the number of links from the group info struct
+    return group_info.nlinks;
+}
+
+//------------------------------------------------------------------------------
+
 void
 HDF5Group::getRootGroup(HDF5Id file_id, const String &name, 
                         HDF5Group &named_root_group)
