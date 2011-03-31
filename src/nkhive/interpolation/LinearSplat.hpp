@@ -65,15 +65,18 @@ LinearSplat<T, SetPolicy>::splat(double x, double y, double z,
     // obtain indices from voxel coordinates
     m_volume->voxelToIndex(voxel_coords, voxel_indices);
 
+    // get the index to voxel mapping offset
+    vec3d kernel_offset = m_volume->kernelOffset();
+
     // get the voxelindices to interpolate from
     vec3i min_indices, max_indices;
-    LinearSamplingUtil<T>::getIndexBounds(voxel_coords, voxel_indices,
+    LinearSamplingUtil<T>::getIndexBounds(voxel_indices,
                                           min_indices, max_indices);
 
     // calc interpolation weights
     calc_type weights[VOXEL_NEIGHBORS];
-    LinearSamplingUtil<T>::computeWeights(voxel_coords, min_indices,
-                                          max_indices, weights);
+    LinearSamplingUtil<T>::computeWeights(voxel_coords, kernel_offset, 
+                                          min_indices, weights);
 
     // splat the value back into the volume weighting it by the
     // interpolated weights

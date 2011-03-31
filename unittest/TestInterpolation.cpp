@@ -119,11 +119,15 @@ template<typename T>
 void
 TestInterpolation<T>::testLinear()
 {
+    USING_NK_NS
     USING_NKHIVE_NS
   
     // construct volume 
     T default_val(1); 
-    typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+    vec3d res(1.0);
+    vec3d kernel_offset(0.5);
+    typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
 
     // set some cell values
     volume->set(0, 1, 0, T(2));
@@ -158,7 +162,8 @@ TestInterpolation<T>::testLinear()
     // test y axis 
     // destroy and create new one
     // clear would be nice here
-    volume = typename Volume<T>::shared_ptr(new Volume<T>(2, 1, default_val));
+    volume = typename Volume<T>::shared_ptr(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
    
     // set some cell values
     volume->set(1, 0, 0, T(2));
@@ -184,7 +189,8 @@ TestInterpolation<T>::testLinear()
     // test z axis 
     // destroy and create new one
     // clear would be nice here
-    volume = typename Volume<T>::shared_ptr(new Volume<T>(2, 1, default_val)); 
+    volume = typename Volume<T>::shared_ptr(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset)); 
    
     // set some cell values
     volume->set(0, 0, 1, T(2));
@@ -208,7 +214,8 @@ TestInterpolation<T>::testLinear()
     CHECK_RESULT(1.5);
 
     // test some more interior points
-    volume = typename Volume<T>::shared_ptr(new Volume<T>(2, 1, default_val)) ;
+    volume = typename Volume<T>::shared_ptr(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
 
     // set some cell values
     volume->set(0,0,0, T(1));
@@ -430,7 +437,10 @@ TestInterpolation<T>::testGetIndexBounds()
   
     // construct volume 
     T default_val(1); 
-    typename Volume<T>::shared_ptr volume(new Volume<T>(1, 2, default_val));
+    vec3d res(1.0);
+    vec3d kernel_offset(0.5);
+    typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(1, 2, default_val, res, kernel_offset));
 
     // create interpolator
     CubicInterpolation<T> cubic_interp(volume);
@@ -488,7 +498,10 @@ TestInterpolation<T>::testCollectInterpolants()
 
     // construct volume 
     T default_val(1); 
-    typename Volume<T>::shared_ptr volume(new Volume<T>(1, 2, default_val));
+    vec3d res(1.0);
+    vec3d kernel_offset(0.5);
+    typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(1, 2, default_val, res, kernel_offset));
     
     // easy to track values    
     i32 value=0; 
@@ -510,7 +523,8 @@ TestInterpolation<T>::testCollectInterpolants()
     cubic_interp.collectInterpolants(min_indices, max_indices, interpolants);
 
     for (i32 i=0; i<64; ++i) {
-        CPPUNIT_ASSERT(interpolants[i] == typename CubicInterpolation<T>::calc_type(i));
+        CPPUNIT_ASSERT(interpolants[i] == 
+                                typename CubicInterpolation<T>::calc_type(i));
     }
 
     // test boundary
@@ -520,12 +534,12 @@ TestInterpolation<T>::testCollectInterpolants()
 
     for (i32 i=0; i<48; ++i) {
         CPPUNIT_ASSERT(interpolants[i] == 
-                                    typename CubicInterpolation<T>::calc_type(i + 16));
+                            typename CubicInterpolation<T>::calc_type(i + 16));
     }
 
     for (i32 i=0; i<16; ++i) {
         CPPUNIT_ASSERT(interpolants[i + 48] == 
-                                        typename CubicInterpolation<T>::calc_type(1));
+                                 typename CubicInterpolation<T>::calc_type(1));
     }
 }
 
@@ -540,7 +554,10 @@ TestInterpolation<T>::testInterp()
 
     // construct volume 
     T default_val(1); 
-    typename Volume<T>::shared_ptr volume(new Volume<T>(1, 2, default_val));
+    vec3d res(1.0);
+    vec3d kernel_offset(0.5);
+    typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(1, 2, default_val, res, kernel_offset));
 
     // easy to track values    
     i32 value=0; 
@@ -602,7 +619,10 @@ TestInterpolation<T>::testInterpNegative()
   
     // construct volume 
     T default_val(1); 
-    typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+    vec3d res(1.0);
+    vec3d kernel_offset(0.5);
+    typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
 
     // set some cell values
     volume->set(-1, -2, -1, T(2));

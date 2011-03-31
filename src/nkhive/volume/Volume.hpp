@@ -66,24 +66,12 @@ template <typename T>
 inline
 Volume<T>::Volume(uint8_t lg_branching_factor, 
                   uint8_t lg_cell_dim,
-                  const_reference default_value) : 
-    m_tree(lg_branching_factor, lg_cell_dim, default_value), 
-    m_local_xform(),
-    m_attributes()
-{
-    createDefaultAttributes();
-}
-
-//------------------------------------------------------------------------------
-
-template <typename T>
-inline
-Volume<T>::Volume(uint8_t lg_branching_factor, 
-                  uint8_t lg_cell_dim,
                   const_reference default_value, 
-                  const vec3d &res) : 
+                  const vec3d &res,
+                  const vec3d &kernel_offset) : 
     m_tree(lg_branching_factor, lg_cell_dim, default_value), 
     m_local_xform(res), 
+    m_kernel_offset(kernel_offset),
     m_attributes()
 {
     createDefaultAttributes();
@@ -104,6 +92,15 @@ inline String
 Volume<T>::typeName() const
 {
     return typeid(T).name();
+}
+
+//------------------------------------------------------------------------------
+
+template <typename T>
+inline vec3d
+Volume<T>::kernelOffset() const
+{
+    return m_kernel_offset;
 }
 
 //------------------------------------------------------------------------------
@@ -338,7 +335,11 @@ template <typename T>
 inline void
 Volume<T>::voxelToIndex(const vec3d &v, vec3i &i) const
 {
-    m_local_xform.voxelToIndex(v, i);
+    vec3d inv_xformed_v = v - m_kernel_offset;
+
+    i.x = (vec3i::BaseType)floor(inv_xformed_v.x);
+    i.y = (vec3i::BaseType)floor(inv_xformed_v.y);
+    i.z = (vec3i::BaseType)floor(inv_xformed_v.z);
 }
 
 //------------------------------------------------------------------------------
@@ -347,7 +348,9 @@ template <typename T>
 inline vec3i
 Volume<T>::voxelToIndex(const vec3d &v) const
 {
-    return m_local_xform.voxelToIndex(v);
+    vec3i i(0,0,0);
+    voxelToIndex(v, i);
+    return i;
 }
 
 //------------------------------------------------------------------------------
@@ -356,7 +359,9 @@ template <typename T>
 inline void
 Volume<T>::indexToVoxel(const vec3i &i, vec3d &v) const
 {
-    m_local_xform.indexToVoxel(i, v);
+    v.x = ((vec3d::BaseType)(i.x)) + m_kernel_offset.x;
+    v.y = ((vec3d::BaseType)(i.y)) + m_kernel_offset.y;
+    v.z = ((vec3d::BaseType)(i.z)) + m_kernel_offset.z;
 }
 
 //------------------------------------------------------------------------------
@@ -365,7 +370,9 @@ template <typename T>
 inline vec3d
 Volume<T>::indexToVoxel(const vec3i &i) const
 {
-    return m_local_xform.indexToVoxel(i);
+    vec3d v(0.0, 0.0, 0.0);
+    indexToVoxel(i, v);
+    return v; 
 }
 
 //------------------------------------------------------------------------------

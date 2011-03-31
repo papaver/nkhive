@@ -79,8 +79,7 @@ public:
     /** 
      * Get the indices for the voxels bounding the input point. 
      */
-    static void getIndexBounds(const vec3d &voxel_coords, 
-                               const vec3i &voxel_indices, 
+    static void getIndexBounds(const vec3i &voxel_indices, 
                                vec3i &min_indices, vec3i &max_indices);
 
     /** 
@@ -95,8 +94,8 @@ public:
      * Compute the weights for the interpolation. 
      */
     static void computeWeights(const vec3d &voxel_coords, 
+                               const vec3d &kernel_offset,
                                const vec3i &min_indices,
-                               const vec3i &max_indices, 
                                calc_type weights[VOXEL_NEIGHBORS]);
 
     /**

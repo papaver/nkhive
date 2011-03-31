@@ -49,21 +49,13 @@
 
 template <typename T>
 inline void
-LinearSamplingUtil<T>::getIndexBounds(const vec3d &voxel_coords, 
-                                      const vec3i &voxel_indices,
+LinearSamplingUtil<T>::getIndexBounds(const vec3i &voxel_indices,
                                       vec3i &min_indices,
                                       vec3i &max_indices)
 {
     // establish the index bounds
-    for (i32 i = 0; i < 3; ++i) {
-        if (round(voxel_coords[i]) > voxel_indices[i]) {
-            min_indices[i] = voxel_indices[i];
-            max_indices[i] = voxel_indices[i] + 1;
-        } else {
-            min_indices[i] = voxel_indices[i] - 1;
-            max_indices[i] = voxel_indices[i];
-        }
-    }
+    min_indices = voxel_indices;
+    max_indices = min_indices + vec3i(1,1,1);
 }
 
 //------------------------------------------------------------------------------
@@ -92,15 +84,15 @@ LinearSamplingUtil<T>::collectInterpolants(const vec3i &min_indices,
 template < typename T >
 inline void
 LinearSamplingUtil<T>::computeWeights(const vec3d &voxel_coords, 
+                                      const vec3d &kernel_offset,
                                       const vec3i &min_indices,
-                                      const vec3i &,
                                       calc_type weights[VOXEL_NEIGHBORS])
 {
     // compute the weights based on normalized voxels
     // TODO: implement vector component wise floor and do this math with vectors
-    calc_vec_type w(voxel_coords[0] - (min_indices[0] + calc_type(0.5)),
-                    voxel_coords[1] - (min_indices[1] + calc_type(0.5)),
-                    voxel_coords[2] - (min_indices[2] + calc_type(0.5)));
+    calc_vec_type w(voxel_coords[0] - (min_indices[0] + kernel_offset[0]),
+                    voxel_coords[1] - (min_indices[1] + kernel_offset[1]),
+                    voxel_coords[2] - (min_indices[2] + kernel_offset[2]));
 
     calc_vec_type w_1_minus(calc_type(1.0) - w[0],
                             calc_type(1.0) - w[1],

@@ -86,15 +86,19 @@ template<typename T>
 void
 TestLinearSplat<T>::test()
 {
+    USING_NK_NS
     USING_NKHIVE_NS
 
     // construct volume
     T default_val(0); 
     T splat_val(1);
+    vec3d res(1.0);
+    vec3d kernel_offset(0.5);
 
     // splat value at the origin.
     {
-        typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+        typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
         LinearSplat<T> splatter(volume);
         splatter.splat(0, 0, 0, splat_val);
 
@@ -110,7 +114,8 @@ TestLinearSplat<T>::test()
 
     // splat value at the center of a voxel.
     {
-        typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+        typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
         LinearSplat<T> splatter(volume);
         splatter.splat(0.5, 0.5, 0.5, splat_val);
 
@@ -133,7 +138,8 @@ TestLinearSplat<T>::test()
 
     // splat value off center closer to origin
     {
-        typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+        typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
         LinearSplat<T> splatter(volume);
         splatter.splat(0.25, 0.25, 0.25, splat_val);
 
@@ -149,7 +155,8 @@ TestLinearSplat<T>::test()
 
     // splat value off center further from origin
     {
-        typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+        typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
         LinearSplat<T> splatter(volume);
         splatter.splat(0.75, 0.75, 0.75, splat_val);
 
@@ -165,7 +172,8 @@ TestLinearSplat<T>::test()
 
     // splat value at negative voxel
     {
-        typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+        typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
         LinearSplat<T> splatter(volume);
         splatter.splat(-0.75, -0.75, -0.75, splat_val);
 
@@ -181,7 +189,8 @@ TestLinearSplat<T>::test()
 
     // splat value at negative voxel closer to zero
     {
-        typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+        typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
         LinearSplat<T> splatter(volume);
         splatter.splat(-0.25, -0.25, -0.25, splat_val);
 
@@ -208,10 +217,13 @@ TestLinearSplat<T>::testPolicies()
     // construct volume
     T default_val(0); 
     T splat_val(1);
+    vec3d res(1.0);
+    vec3d kernel_offset(0.5);
 
     // test std::plus
     {
-        typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+        typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
         LinearSplat<T, std::plus> splatter(volume);
         splatter.splat(0, 0, 0, splat_val);
         splatter.splat(0, 0, 0, splat_val);
@@ -228,7 +240,8 @@ TestLinearSplat<T>::testPolicies()
 
     // test set
     {
-        typename Volume<T>::shared_ptr volume(new Volume<T>(2, 1, default_val));
+        typename Volume<T>::shared_ptr volume(
+                        new Volume<T>(2, 1, default_val, res, kernel_offset));
         LinearSplat<T, set_op> splatter(volume);
         splatter.splat(0, 0, 0, splat_val);
         splatter.splat(0, 0, 0, splat_val);

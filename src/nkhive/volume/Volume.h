@@ -86,15 +86,19 @@ public:
 
     Volume();
     Volume(uint8_t lg_branching_factor, uint8_t lg_cell_dim, 
-           const_reference default_value);
-    Volume(uint8_t lg_branching_factor, uint8_t lg_cell_dim, 
-           const_reference default_value, const vec3d &localres);
+           const_reference default_value, const vec3d &localres = vec3d(1.0),
+           const vec3d &kernel_offset = vec3d(0.0));
     ~Volume();
 
     /** 
      * Return the name of the type of volume this is. 
      */
     String typeName() const;
+
+    /**
+     * Return the discrete offset
+     */
+    vec3d kernelOffset() const;
 
     /**
      * Return the default value of the volume. 
@@ -281,6 +285,11 @@ private:
      * the volume.
      */
     LocalXform m_local_xform;
+
+    /**
+     * Offset mapping from discrete space to voxel space
+     */
+    vec3d m_kernel_offset;
     
     /**
      * Attributes for the volume are stored in an AttributeCollection.
