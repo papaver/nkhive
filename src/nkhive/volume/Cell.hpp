@@ -1427,8 +1427,8 @@ Cell<T, A>::const_iterator::operator==(const const_iterator& that) const
 {
     // Either check bitfields if we have a filled cell or the pointer if we
     // don't.
-    return (m_bitfield_iter == that.m_bitfield_iter && 
-            m_isFilled == that.m_isFilled) || (m_p == that.m_p);
+    return (m_isFilled == that.m_isFilled &&
+            m_bitfield_iter == that.m_bitfield_iter) || (m_p == that.m_p);
 }
 
 //-----------------------------------------------------------------------------

@@ -494,7 +494,6 @@ public:
 
     bool operator==(const const_iterator& that) const;
     bool operator!=(const const_iterator& that) const;
-    //bool operator&&(const const_iterator& that) const;
     bool operator<=(const const_iterator& that) const;
   
 private:

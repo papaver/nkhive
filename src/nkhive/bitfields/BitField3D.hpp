@@ -387,7 +387,7 @@ bool
 BitField3D<T, A>::isSingleBitSet(index_type i) const 
 {
     index_type block = i / bitsof(T);
-    index_type bit = i % bitsof(T);
+    index_type bit   = i % bitsof(T);
 
     // Early check to see if this bit is the only one set in the block.
     if (m_blocks[block] != getBitMask(T, bit)) return false;
